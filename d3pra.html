@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>  
+    <head>  
+        <meta charset="utf-8">  
+        <title>D3.js Practice</title>  
+        <link href="d3pra.css", rel="stylesheet", type="text/css">
+    </head>  
+    <body>  
+	
+		<p>Apple</p>
+		<p>Pear</p>
+		<p>Banana</p>
+
+		
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+        <script>
+        /*
+        var body = d3.select("body");
+        body.append("p").text("Pineapple");
+        body.insert("p","p").text("Mellon");*/
+        
+        var width = 600;	//画布的宽度
+	    var height = 600;	//画布的高度
+
+	    var svg = d3.select("body")				//选择文档中的body元素
+				.append("svg")				//添加一个svg元素
+				.attr("width", width)		//设定宽度
+				.attr("height", height);	//设定高度
+	
+	    var dataset = [ 80 , 90, 70 , 60 , 70 ];
+        var skills = ["SQL", "Python", "SAS", "R", "JavaScript"];
+        
+
+	    var linear = d3.scale.linear()
+					.domain([0, d3.max(dataset)])
+					.range([0, 250]);
+
+        var axis = d3.svg.axis()
+                     .scale(linear)
+                     .orient("bottom")
+                     .ticks(8);    
+
+	    var rectHeight = 25;	//每个矩形所占的像素高度(包括空白)
+        var yposition = 25 * dataset.length;
+        
+
+	    svg.selectAll("rect")
+		  .data(dataset)
+		  .enter()
+		  .append("rect")
+		  .attr("x",170)
+		  .attr("y",function(d,i){
+				return i * rectHeight;
+		  })
+		  .attr("width",function(d){
+		   		return linear(d);
+		  })
+		  .attr("height",rectHeight-2)
+		  .attr("fill","steelblue")
+          .transition()
+          .duration(2000)
+          .delay(1000)
+          .ease("bounce")
+          .attr("x", 220)
+          .style("fill","darkgrey");
+          
+        /*
+        svg.append("g")
+           .attr("class","axis")
+           .attr("transform", "translate(170,"+ yposition + ")")
+           .call(axis);  */
+
+        var texts = svg.selectAll(".MyText")
+                       .data(skills)
+                       .enter()
+                       .append("text")
+                       .attr("class", "MyText")
+                       .attr("transform", "translate(20, 15)")
+                       .attr("x", function(){
+                           return 70;
+                       })
+                       .attr("y", function(d,i){
+                           return i * rectHeight;
+                       })
+                       .text(function(d){
+                           return d;
+                       })
+                       .transition()
+                       .delay(1000)
+                       .attr("x", 120);
+
+                          
+
+        //使用 datum 绑定单个数据
+        /*p.datum(str);
+
+        p.text(function(d, i){
+        	return "第 "+ i + " 个元素绑定的数据是 " + d;
+        });*/
+
+		//使用 data 绑定数组
+		//var dataset = ["I like dogs","I like cats","I like snakes"];
+
+		/*p.data(dataset)
+			.text(function(d, i){
+				return "第 "+ i + " 个元素绑定的数据是 " + d;
+			});*/
+
+        </script>  
+  
+    </body>  
+</html>  

@@ -1,0 +1,8 @@
+.axis path, .axis line{
+    fill: red;
+    stroke: green;
+}
+
+.axis text{
+    font-size: 1em;
+}
