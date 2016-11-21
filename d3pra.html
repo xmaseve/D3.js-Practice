@@ -20,7 +20,7 @@
         body.insert("p","p").text("Mellon");*/
         
         var width = 600;	//画布的宽度
-	    var height = 600;	//画布的高度
+	    var height = 200;	//画布的高度
 
 	    var svg = d3.select("body")				//选择文档中的body元素
 				.append("svg")				//添加一个svg元素
@@ -44,7 +44,7 @@
         var yposition = 25 * dataset.length;
         
 
-	    svg.selectAll("rect")
+	    var rects = svg.selectAll("rect")
 		  .data(dataset)
 		  .enter()
 		  .append("rect")
@@ -57,12 +57,22 @@
 		  })
 		  .attr("height",rectHeight-2)
 		  .attr("fill","steelblue")
+          .on("mouseover", function(d,i){
+              d3.select(this)
+                .attr("fill","black");
+          })
+          .on("mouseout", function(d,i){
+              d3.select(this)
+                .attr("fill","steelblue");
+          });
+          /*
           .transition()
           .duration(2000)
           .delay(1000)
           .ease("bounce")
           .attr("x", 220)
-          .style("fill","darkgrey");
+          .style("fill","darkgrey");*/
+
           
         /*
         svg.append("g")
@@ -87,24 +97,61 @@
                        })
                        .transition()
                        .delay(1000)
-                       .attr("x", 120);
+                       .attr("x", 120)
+                       .transition()
+                       .duration(2000)
+                       .attr("x", 70);
+         
 
-                          
+        //Pie Chart
+        var piewidth = 400;
+		var pieheight = 400;
+		var dataset = [ 30 , 10 , 43 , 55 , 13 ];
+		
+		var piesvg = d3.select("body")
+					.append("svg")
+					.attr("width", piewidth)
+					.attr("height", pieheight);
+		
+		var pie = d3.layout.pie();
 
-        //使用 datum 绑定单个数据
-        /*p.datum(str);
+		var piedata = pie(dataset);
+		
+		var outerRadius = 150;	//外半径
+		var innerRadius = 50;	//内半径，为0则中间没有空白
 
-        p.text(function(d, i){
-        	return "第 "+ i + " 个元素绑定的数据是 " + d;
-        });*/
-
-		//使用 data 绑定数组
-		//var dataset = ["I like dogs","I like cats","I like snakes"];
-
-		/*p.data(dataset)
-			.text(function(d, i){
-				return "第 "+ i + " 个元素绑定的数据是 " + d;
-			});*/
+		var arc = d3.svg.arc()	//弧生成器
+					.innerRadius(innerRadius)	//设置内半径
+					.outerRadius(outerRadius);	//设置外半径
+		
+		var color = d3.scale.category20();
+		
+		var arcs = piesvg.selectAll("g")
+					  .data(piedata)
+					  .enter()
+					  .append("g")
+					  .attr("transform","translate("+ (piewidth/2) +","+ (piewidth/2) +")");
+					  
+		arcs.append("path")
+			.attr("fill",function(d,i){
+				return color(i);
+			})
+			.attr("d",function(d){
+				return arc(d);
+			});
+		
+		arcs.append("text")
+			.attr("transform",function(d){
+				return "translate(" + arc.centroid(d) + ")";
+			})
+			.attr("text-anchor","middle")
+			.text(function(d){
+				return d.data;
+			});
+		
+		console.log(dataset);
+		console.log(piedata);
+        
 
         </script>  
   
