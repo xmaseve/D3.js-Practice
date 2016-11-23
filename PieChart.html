@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>  
+    <head>  
+        <meta charset="utf-8">  
+        <title>D3.js Practice</title>  
+        <link href="d3pra.css", rel="stylesheet", type="text/css">
+    </head>  
+    <body>  
+		
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+    script>
+        
+       
+        //Pie Chart
+        var piewidth = 400;
+		    var pieheight = 400;
+		    var pieDataset = [{label:"A", count: 30}, {label:"B", count: 10}, {label:"C", count: 43}, {label:"D", count:55}, {label:"E", count:13}];
+		    var getNum = function(){
+            var pie_data = [];
+            for (var i=0; i < pieDataset.length; i++){
+                pie_data.push(pieDataset[i].count);
+            };
+            return pie_data;
+        };
+        //console.log(pieDataset.length);
+        var pie_data = getNum();
+        //console.log(pie_data);
+		var piesvg = d3.select("body")
+					.append("svg")
+					.attr("width", piewidth)
+					.attr("height", pieheight);
+		
+		var pie = d3.layout.pie();
+
+		var piedata = pie(pie_data);
+		
+		var outerRadius = 150;	//外半径
+		var innerRadius = 70;	//内半径，为0则中间没有空白
+
+		var arc = d3.svg.arc()	//弧生成器
+					.innerRadius(innerRadius)	//设置内半径
+					.outerRadius(outerRadius);	//设置外半径
+		
+		var color = d3.scale.category20();
+		
+		var arcs = piesvg.selectAll("g")
+					  .data(piedata)
+					  .enter()
+					  .append("g")
+					  .attr("transform","translate("+ (piewidth/2) +","+ (piewidth/2) +")");
+					  
+		arcs.append("path")
+			.attr("fill",function(d,i){
+				return color(i);
+			})
+			.attr("d",function(d){
+				return arc(d);
+			});
+		
+		arcs.append("text")
+			.attr("transform",function(d){
+				return "translate(" + arc.centroid(d) + ")";
+			})
+			.attr("text-anchor","middle")
+			.text(function(d){
+				return d.data;
+			});
+		
+		console.log(dataset);
+		console.log(piedata);
+        
+        
+
+        </script>  
+  
+    </body>  
+</html>  
